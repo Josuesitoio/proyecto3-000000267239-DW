@@ -1,0 +1,1285 @@
+/* ==========================================================================
+   NEXUS // CYBER-STORE v4.2 - IMMERSIVE SCI-FI HUD & GLASSMORPHISM ENGINE
+   ========================================================================== */
+
+:root {
+    --bg-void: #07090E;
+    --bg-boot: #030508;
+    --bg-panel: rgba(15, 20, 32, 0.78);
+    --bg-input: rgba(7, 11, 20, 0.82);
+    --accent-cyan: #00F0FF;
+    --accent-violet: #7000FF;
+    --accent-emerald: #00FF9D;
+    --accent-warning: #FFB800;
+    --accent-danger: #FF0055;
+    --text-primary: #E8F1FF;
+    --text-secondary: #B8CBE2;
+    --text-muted: #8A99AD;
+    --border-glow: rgba(0, 240, 255, 0.28);
+    --clip-bevel: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Custom Scrollbar Sci-Fi */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #07090E;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #00F0FF 0%, #7000FF 100%);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #00FF9D 0%, #00F0FF 100%);
+}
+
+html,
+body {
+    min-height: 100vh;
+    background-color: var(--bg-void);
+    color: var(--text-primary);
+    font-family: 'Rajdhani', 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* ==========================================================================
+   CAPA 1: SECUENCIA DE ARRANQUE CINEMÁTICA (QUANTUM CORE BOOTLOADER)
+   ========================================================================== */
+.preloader-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    overflow: hidden;
+    transition:
+        opacity 0.75s cubic-bezier(0.7, 0, 0.2, 1) 0.15s,
+        visibility 0.75s linear 0.15s;
+}
+
+/* Compuertas Blindadas Superior e Inferior (Blast Doors) */
+.preloader-shutter-top,
+.preloader-shutter-bottom {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 50.5%;
+    background-color: var(--bg-boot);
+    background-image:
+        repeating-linear-gradient(
+            0deg,
+            rgba(0, 240, 255, 0.035) 0,
+            rgba(0, 240, 255, 0.035) 1px,
+            transparent 1px,
+            transparent 3px
+        ),
+        radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.12) 0%, rgba(112, 0, 255, 0.08) 42%, transparent 75%);
+    z-index: 1;
+    transition: transform 0.9s cubic-bezier(0.85, 0, 0.15, 1);
+}
+
+.preloader-shutter-top {
+    top: 0;
+    border-bottom: 1px solid rgba(0, 240, 255, 0.45);
+    box-shadow: 0 4px 30px rgba(0, 240, 255, 0.25);
+}
+
+.preloader-shutter-bottom {
+    bottom: 0;
+    border-top: 1px solid rgba(112, 0, 255, 0.45);
+    box-shadow: 0 -4px 30px rgba(112, 0, 255, 0.25);
+}
+
+.preloader-overlay.preloader-exit {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.preloader-overlay.preloader-exit .preloader-shutter-top {
+    transform: translateY(-102%);
+}
+
+.preloader-overlay.preloader-exit .preloader-shutter-bottom {
+    transform: translateY(102%);
+}
+
+.preloader-overlay.preloader-exit .preloader-terminal {
+    transform: scale(1.08) translateY(-12px);
+    opacity: 0;
+    filter: blur(14px);
+}
+
+.preloader-terminal {
+    width: 100%;
+    max-width: 680px;
+    background: linear-gradient(135deg, rgba(10, 16, 30, 0.94) 0%, rgba(4, 7, 14, 0.96) 100%);
+    border: 1px solid rgba(0, 240, 255, 0.45);
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.9),
+        0 0 45px rgba(0, 240, 255, 0.2),
+        inset 0 0 25px rgba(0, 240, 255, 0.06);
+    clip-path: var(--clip-bevel);
+    padding: 30px 34px;
+    position: relative;
+    z-index: 2;
+    transition:
+        transform 0.65s cubic-bezier(0.7, 0, 0.2, 1),
+        opacity 0.55s ease,
+        filter 0.55s ease;
+}
+
+.preloader-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 14px;
+    margin-bottom: 22px;
+    border-bottom: 1px solid rgba(0, 240, 255, 0.25);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--accent-cyan);
+    text-transform: uppercase;
+}
+
+.preloader-status-chip {
+    padding: 4px 11px;
+    font-size: 0.64rem;
+    background: rgba(0, 240, 255, 0.12);
+    border: 1px solid rgba(0, 240, 255, 0.5);
+    color: var(--accent-cyan);
+    border-radius: 3px;
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
+}
+
+/* Reactor Holográfico Central + Telemetría de Arranque */
+.preloader-core-stage {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 26px;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+@media (max-width: 600px) {
+    .preloader-core-stage {
+        grid-template-columns: 1fr;
+        justify-items: center;
+    }
+}
+
+.quantum-reactor {
+    width: 128px;
+    height: 128px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reactor-ring-outer {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px dashed rgba(0, 240, 255, 0.55);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.2), inset 0 0 15px rgba(0, 240, 255, 0.12);
+    animation: spinOrbitCW 8s linear infinite;
+}
+
+.reactor-ring-mid {
+    position: absolute;
+    inset: 14px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: var(--accent-cyan);
+    border-bottom-color: var(--accent-violet);
+    filter: drop-shadow(0 0 8px var(--accent-cyan));
+    animation: spinOrbitCCW 3.2s linear infinite;
+}
+
+.reactor-ring-inner {
+    position: absolute;
+    inset: 28px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 255, 157, 0.45);
+    border-left-color: transparent;
+    border-right-color: transparent;
+    animation: spinOrbitCW 2.1s linear infinite;
+}
+
+.reactor-core-readout {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.preloader-percent {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    text-shadow: 0 0 14px var(--accent-cyan), 0 0 28px var(--accent-violet);
+}
+
+.reactor-unit {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.54rem;
+    letter-spacing: 0.16em;
+    color: var(--accent-emerald);
+}
+
+/* Líneas de Diagnóstico Secuenciales */
+.preloader-logs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-family: 'Rajdhani', 'Courier New', monospace;
+    font-size: 0.96rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+}
+
+.log-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0.28;
+    transform: translateX(-8px);
+    transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease;
+}
+
+.log-line.log-active {
+    opacity: 1;
+    transform: translateX(0);
+    color: var(--text-primary);
+}
+
+.log-tag-ok {
+    display: inline-block;
+    min-width: 44px;
+    text-align: center;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: rgba(0, 255, 157, 0.12);
+    border: 1px solid rgba(0, 255, 157, 0.45);
+    color: var(--accent-emerald);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-shadow: 0 0 8px rgba(0, 255, 157, 0.45);
+}
+
+.log-tag-active {
+    display: inline-block;
+    min-width: 44px;
+    text-align: center;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: rgba(0, 240, 255, 0.14);
+    border: 1px solid rgba(0, 240, 255, 0.55);
+    color: var(--accent-cyan);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-shadow: 0 0 8px rgba(0, 240, 255, 0.55);
+}
+
+.blink-cursor {
+    display: inline-block;
+    color: var(--accent-cyan);
+    margin-left: 4px;
+    animation: blinkCursor 0.75s steps(2, start) infinite;
+}
+
+.preloader-progress-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.preloader-submetrics {
+    display: flex;
+    gap: 14px;
+    color: var(--accent-cyan);
+}
+
+.preloader-bar-track {
+    width: 100%;
+    height: 10px;
+    background: rgba(5, 8, 15, 0.95);
+    border: 1px solid rgba(0, 240, 255, 0.35);
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.85);
+}
+
+.preloader-bar-fill {
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #00F0FF 0%, #7000FF 55%, #00FF9D 100%);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.85);
+    position: relative;
+}
+
+.preloader-bar-fill::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 18px;
+    height: 100%;
+    background: #FFFFFF;
+    filter: blur(3px);
+    box-shadow: 0 0 14px #FFFFFF, 0 0 24px var(--accent-cyan);
+}
+
+/* ==========================================================================
+   CAPA 2: FONDO DE ENTORNO VIVO (3D CYBER-GRID + HTML5 QUANTUM CANVAS)
+   ========================================================================== */
+.quantum-environment {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+    background: radial-gradient(circle at 50% 15%, #11192E 0%, #07090E 55%, #020305 100%);
+    perspective: 550px;
+}
+
+.cyber-grid-3d {
+    position: absolute;
+    left: -50%;
+    right: -50%;
+    bottom: -35%;
+    height: 130%;
+    transform: rotateX(72deg) translateZ(-120px);
+    transform-origin: center top;
+    background-image:
+        linear-gradient(to right, rgba(0, 240, 255, 0.14) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(112, 0, 255, 0.14) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse at 50% 30%, rgba(0, 0, 0, 1) 10%, rgba(0, 0, 0, 0) 70%);
+    -webkit-mask-image: radial-gradient(ellipse at 50% 30%, rgba(0, 0, 0, 1) 10%, rgba(0, 0, 0, 0) 70%);
+    animation: gridTravel 2.2s linear infinite;
+}
+
+#quantum-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* ==========================================================================
+   CONTENEDOR SHELL Y COREOGRAFÍA DE ENTRADA EN CASCADA (CAPA 3)
+   ========================================================================== */
+.cyber-shell {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 28px 28px 54px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Estado inicial antes de .system-ready */
+.hud-header {
+    transform: translateY(-40px) scale(0.98);
+    opacity: 0;
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+}
+
+.panel-ingreso {
+    transform: translateX(-60px);
+    opacity: 0;
+    filter: blur(6px);
+    transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.25s;
+}
+
+.panel-catalogo {
+    transform: translateX(60px);
+    opacity: 0;
+    filter: blur(6px);
+    transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.4s;
+}
+
+/* Estado activo cuando el body recibe .system-ready */
+body.system-ready .hud-header {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+body.system-ready .panel-ingreso {
+    transform: translateX(0);
+    opacity: 1;
+    filter: blur(0);
+}
+
+body.system-ready .panel-catalogo {
+    transform: translateX(0);
+    opacity: 1;
+    filter: blur(0);
+}
+
+.cyber-row {
+    opacity: 0;
+    transition:
+        transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+        background 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+body.system-ready .cyber-row {
+    animation: rowFadeInUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: calc(0.55s + (var(--row-index, 0) * 0.08s));
+}
+
+/* ==========================================================================
+   CAPA 4: GLASSMORPHISM MULTICAPA, ESQUINAS HUD, ESCÁNER HOLOGRÁFICO & GLITCH
+   ========================================================================== */
+.glass-panel {
+    background: linear-gradient(135deg, rgba(15, 22, 38, 0.62) 0%, rgba(9, 13, 22, 0.42) 100%);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border: 1px solid rgba(0, 240, 255, 0.22);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Línea de Escáner Láser Holográfico en Hover */
+.glass-panel::after {
+    content: "";
+    position: absolute;
+    top: -150px;
+    left: 0;
+    width: 100%;
+    height: 120px;
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(0, 240, 255, 0.08) 80%,
+        rgba(0, 240, 255, 0.55) 98%,
+        #FFFFFF 100%
+    );
+    opacity: 0;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.glass-panel:hover::after {
+    animation: holoScanner 1.35s cubic-bezier(0.4, 0, 0.2, 1) 1;
+}
+
+.glass-panel:hover {
+    border-color: rgba(0, 240, 255, 0.42);
+}
+
+/* Adornos de Esquinas Tácticas HUD (4 Brackets Luminosos) */
+.hud-corners {
+    position: absolute;
+    inset: 6px;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.hud-corners::before,
+.hud-corners::after,
+.hud-corner-bl,
+.hud-corner-br {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-color: var(--accent-cyan);
+    border-style: solid;
+    opacity: 0.75;
+    transition: all 0.3s ease;
+}
+
+.hud-corners::before {
+    top: 0;
+    left: 0;
+    border-width: 2px 0 0 2px;
+}
+
+.hud-corners::after {
+    top: 0;
+    right: 0;
+    border-width: 2px 2px 0 0;
+}
+
+.hud-corner-bl {
+    bottom: 0;
+    left: 0;
+    border-width: 0 0 2px 2px;
+}
+
+.hud-corner-br {
+    bottom: 0;
+    right: 0;
+    border-width: 0 2px 2px 0;
+}
+
+.glass-panel:hover .hud-corners::before,
+.glass-panel:hover .hud-corners::after,
+.glass-panel:hover .hud-corner-bl,
+.glass-panel:hover .hud-corner-br {
+    width: 16px;
+    height: 16px;
+    opacity: 1;
+    filter: drop-shadow(0 0 6px var(--accent-cyan));
+}
+
+/* Cabecera HUD */
+.hud-header {
+    padding: 24px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.hud-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    position: relative;
+    z-index: 4;
+}
+
+.hud-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent-cyan);
+}
+
+.hud-eyebrow-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--accent-emerald);
+    box-shadow: 0 0 12px var(--accent-emerald);
+    animation: optimalHalo 2.5s infinite ease-in-out;
+}
+
+/* Título Principal con Efecto Glitch de Aberración Cromática */
+.glitch-title {
+    position: relative;
+    display: inline-block;
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.38rem, 2.3vw, 2rem);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    text-shadow: 0 0 22px rgba(0, 240, 255, 0.32);
+}
+
+.glitch-title::before,
+.glitch-title::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.glitch-title::before {
+    color: #00F0FF;
+    left: -2px;
+    z-index: -1;
+    animation: cyberGlitch 5.5s infinite linear alternate-reverse;
+}
+
+.glitch-title::after {
+    color: #FF0055;
+    left: 2px;
+    z-index: -2;
+    animation: cyberGlitch 5.5s infinite linear;
+}
+
+.hud-subtitle {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+/* Tarjeta de Telemetría Biselada */
+.hud-telemetry {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+    z-index: 4;
+}
+
+.telemetry-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, rgba(0, 240, 255, 0.11) 0%, rgba(112, 0, 255, 0.14) 100%);
+    border: 1px solid rgba(0, 240, 255, 0.42);
+    clip-path: var(--clip-bevel);
+    box-shadow: 0 0 24px rgba(0, 240, 255, 0.15), inset 0 0 14px rgba(0, 240, 255, 0.08);
+    transition: all 0.3s ease;
+}
+
+.telemetry-card:hover {
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 30px rgba(0, 240, 255, 0.3), inset 0 0 18px rgba(0, 240, 255, 0.14);
+    transform: translateY(-2px);
+}
+
+.telemetry-count {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: var(--accent-cyan);
+    text-shadow: 0 0 14px rgba(0, 240, 255, 0.7);
+    min-width: 2ch;
+    text-align: right;
+}
+
+.telemetry-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.telemetry-tag {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    color: var(--accent-emerald);
+    text-transform: uppercase;
+}
+
+.telemetry-label {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+}
+
+/* ==========================================================================
+   BANNERS DE NOTIFICACIÓN POST-REDIRECT-GET (PRG)
+   ========================================================================== */
+.hud-alert {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 15px 22px;
+    clip-path: var(--clip-bevel);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.hud-alert-success {
+    background: linear-gradient(90deg, rgba(0, 255, 157, 0.14) 0%, rgba(15, 22, 38, 0.75) 100%);
+    border: 1px solid rgba(0, 255, 157, 0.5);
+    color: var(--accent-emerald);
+    box-shadow: 0 0 24px rgba(0, 255, 157, 0.18);
+}
+
+.hud-alert-error {
+    background: linear-gradient(90deg, rgba(255, 0, 85, 0.16) 0%, rgba(15, 22, 38, 0.78) 100%);
+    border: 1px solid rgba(255, 0, 85, 0.55);
+    color: #FF5C8D;
+    box-shadow: 0 0 24px rgba(255, 0, 85, 0.22);
+}
+
+.alert-tag {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.68rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid currentColor;
+}
+
+/* ==========================================================================
+   LAYOUT DE DOS PANELES (GRID)
+   ========================================================================== */
+.cyber-grid {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+@media (max-width: 1100px) {
+    .cyber-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.cyber-panel {
+    padding: 26px;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(0, 240, 255, 0.18);
+    position: relative;
+    z-index: 4;
+}
+
+.panel-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.panel-code {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-cyan);
+}
+
+.panel-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.02rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+}
+
+.panel-badge {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 11px;
+    border-radius: 4px;
+    background: rgba(112, 0, 255, 0.2);
+    border: 1px solid rgba(112, 0, 255, 0.5);
+    color: #DAC4FF;
+}
+
+/* ==========================================================================
+   PANEL IZQUIERDO: TERMINAL DE INGRESO DE INVENTARIO
+   ========================================================================== */
+.tactical-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    z-index: 4;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.field-label {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.field-hint {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.76rem;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    text-transform: none;
+}
+
+.cyber-input,
+.cyber-select {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--bg-input);
+    border: 1px solid rgba(138, 153, 173, 0.28);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-family: 'Rajdhani', 'Space Grotesk', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    transition: all 0.25s ease;
+    outline: none;
+}
+
+.cyber-input::placeholder {
+    color: rgba(138, 153, 173, 0.52);
+    font-weight: 500;
+}
+
+.cyber-input:hover,
+.cyber-select:hover {
+    border-color: rgba(0, 240, 255, 0.48);
+}
+
+.cyber-input:focus,
+.cyber-select:focus {
+    border-color: var(--accent-cyan);
+    background: rgba(10, 17, 32, 0.96);
+    clip-path: var(--clip-bevel);
+    box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.18), 0 0 18px rgba(0, 240, 255, 0.26);
+}
+
+.cyber-select option {
+    background-color: #090D18;
+    color: var(--text-primary);
+}
+
+/* ==========================================================================
+   CAPA 5.1: BOTÓN MAGNÉTICO CON RESPIRACIÓN DE PLASMA
+   ========================================================================== */
+.magnetic-wrap {
+    margin-top: 8px;
+    perspective: 400px;
+}
+
+.btn-cyber-submit {
+    width: 100%;
+    padding: 15px 20px;
+    border: 1px solid rgba(0, 240, 255, 0.78);
+    clip-path: var(--clip-bevel);
+    background: linear-gradient(120deg, #00F0FF 0%, #7000FF 50%, #00F0FF 100%);
+    background-size: 200% auto;
+    color: #FFFFFF;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.65);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    animation: plasmaBreathing 3s ease-in-out infinite;
+    transition:
+        transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+        background-position 0.45s ease,
+        filter 0.25s ease;
+    will-change: transform, box-shadow;
+}
+
+.btn-cyber-submit:hover {
+    background-position: right center;
+    filter: brightness(1.12);
+}
+
+.terminal-footnote {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px dashed rgba(0, 240, 255, 0.2);
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    position: relative;
+    z-index: 4;
+}
+
+/* ==========================================================================
+   PANEL DERECHO: MATRIZ TABULAR JSTL & MICRO-INTERACCIONES
+   ========================================================================== */
+.table-scroll-container {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 240, 255, 0.18);
+    background: rgba(5, 8, 15, 0.58);
+    position: relative;
+    z-index: 4;
+}
+
+.cyber-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    min-width: 800px;
+}
+
+.cyber-table thead tr {
+    background: linear-gradient(90deg, rgba(0, 240, 255, 0.12) 0%, rgba(112, 0, 255, 0.12) 100%);
+    border-bottom: 1px solid rgba(0, 240, 255, 0.32);
+}
+
+.cyber-table th {
+    padding: 15px 16px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-cyan);
+    white-space: nowrap;
+}
+
+.cyber-table tbody tr {
+    border-bottom: 1px solid rgba(138, 153, 173, 0.12);
+}
+
+.cyber-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+/* Micro-interacción en Hover de Fila */
+.cyber-row:hover {
+    transform: translateX(6px);
+    background: linear-gradient(
+        90deg,
+        rgba(0, 240, 255, 0.12) 0%,
+        rgba(112, 0, 255, 0.04) 60%,
+        transparent 100%
+    );
+    box-shadow: inset 3px 0 0 #00F0FF;
+}
+
+.cyber-table td {
+    padding: 15px 16px;
+    font-size: 0.98rem;
+    color: var(--text-primary);
+    vertical-align: middle;
+}
+
+.cell-id {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.cell-sku {
+    display: inline-block;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--accent-cyan);
+    background: rgba(0, 240, 255, 0.09);
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    padding: 4px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.cell-product {
+    font-weight: 700;
+    font-size: 1.02rem;
+    color: #FFFFFF;
+    letter-spacing: 0.01em;
+}
+
+.cell-category {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 5px;
+    background: rgba(112, 0, 255, 0.16);
+    border: 1px solid rgba(112, 0, 255, 0.38);
+    color: #DEC9FF;
+    font-size: 0.86rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.cell-price {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--accent-emerald);
+    text-shadow: 0 0 12px rgba(0, 255, 157, 0.28);
+    white-space: nowrap;
+}
+
+.cell-date {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    white-space: nowrap;
+}
+
+/* ==========================================================================
+   CAPA 5.2: BADGES DE TELEMETRÍA PULSANTES (JSTL c:choose)
+   ========================================================================== */
+.stock-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 13px;
+    border-radius: 999px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.69rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+}
+
+/* Óptimo (stock > 5) */
+.badge-optimal {
+    background: rgba(0, 255, 157, 0.08);
+    border: 1px solid #00FF9D;
+    color: #00FF9D;
+    box-shadow: 0 0 12px rgba(0, 255, 157, 0.16);
+}
+
+.badge-optimal .status-dot {
+    background-color: #00FF9D;
+    animation: optimalHalo 2.5s ease-in-out infinite;
+}
+
+/* Crítico (1 <= stock <= 5) */
+.badge-low {
+    background: rgba(255, 184, 0, 0.14);
+    border: 1px solid #FFB800;
+    color: #FFE18D;
+    animation: criticalPulse 1.1s ease-in-out infinite;
+}
+
+.badge-low .status-dot {
+    background-color: #FFB800;
+    box-shadow: 0 0 10px #FF0055;
+    animation: blinkCursor 0.55s steps(2, start) infinite;
+}
+
+/* Agotado (stock == 0) */
+.badge-out {
+    border: 1px solid #FF0055;
+    color: #FF0055;
+    background: repeating-linear-gradient(
+        -45deg,
+        rgba(255, 0, 85, 0.18),
+        rgba(255, 0, 85, 0.18) 8px,
+        rgba(15, 20, 32, 0.8) 8px,
+        rgba(15, 20, 32, 0.8) 16px
+    );
+    animation: dangerFlicker 1.8s infinite;
+}
+
+.badge-out .status-dot {
+    background-color: #FF0055;
+    box-shadow: 0 0 10px #FF0055;
+}
+
+.empty-vault {
+    padding: 46px 24px;
+    text-align: center;
+    color: var(--text-muted);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.84rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* ==========================================================================
+   KEYFRAMES CINEMÁTICOS
+   ========================================================================== */
+@keyframes spinOrbitCW {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes spinOrbitCCW {
+    0% {
+        transform: rotate(360deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+@keyframes blinkCursor {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+
+@keyframes gridTravel {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 0 56px;
+    }
+}
+
+@keyframes rowFadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(22px) scale(0.985);
+        filter: blur(4px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+@keyframes holoScanner {
+    0% {
+        top: -150px;
+        opacity: 1;
+    }
+    100% {
+        top: 110%;
+        opacity: 0;
+    }
+}
+
+@keyframes cyberGlitch {
+    0%, 88% {
+        clip-path: inset(0 0 100% 0);
+        transform: translate(0, 0) skewX(0deg);
+    }
+    89% {
+        clip-path: inset(12% 0 65% 0);
+        transform: translate(-3px, 1px) skewX(8deg);
+    }
+    91% {
+        clip-path: inset(68% 0 8% 0);
+        transform: translate(3px, -1px) skewX(-6deg);
+    }
+    93% {
+        clip-path: inset(35% 0 42% 0);
+        transform: translate(-2px, 0) skewX(5deg);
+    }
+    95% {
+        clip-path: inset(8% 0 78% 0);
+        transform: translate(2px, 1px) skewX(-4deg);
+    }
+    97% {
+        clip-path: inset(52% 0 20% 0);
+        transform: translate(-3px, -1px) skewX(8deg);
+    }
+    100% {
+        clip-path: inset(0 0 100% 0);
+        transform: translate(0, 0) skewX(0deg);
+    }
+}
+
+@keyframes plasmaBreathing {
+    0%, 100% {
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.4), inset 0 0 8px rgba(255, 255, 255, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 32px rgba(0, 240, 255, 0.75), 0 0 60px rgba(112, 0, 255, 0.45);
+    }
+}
+
+@keyframes optimalHalo {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(0, 255, 157, 0.75), 0 0 8px #00FF9D;
+    }
+    50% {
+        box-shadow: 0 0 0 6px rgba(0, 255, 157, 0), 0 0 14px #00FF9D;
+    }
+}
+
+@keyframes criticalPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 8px rgba(255, 184, 0, 0.3);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 22px rgba(255, 0, 85, 0.75);
+    }
+}
+
+@keyframes dangerFlicker {
+    0%, 19%, 21%, 63%, 65%, 100% {
+        opacity: 1;
+        box-shadow: 0 0 16px rgba(255, 0, 85, 0.35);
+    }
+    20%, 64% {
+        opacity: 0.55;
+        box-shadow: 0 0 6px rgba(255, 0, 85, 0.12);
+    }
+}
